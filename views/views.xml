@@ -16,7 +16,7 @@
           </style>
         <div class="row b">
             <div class="col-xs-12">
-                <img t-if="o.company_id.logo" t-att-src="'data:image/png;base64,%s' % to_text(o.company_id.logo)" style="max-height: 100px;"/>
+                <img t-if="o.company_id.logo" t-att-src="'data:image/png;base64,%s' % to_text(o.company_id.logo)" style="max-height: 45px;"/>
             </div>        
         </div>
           <div class="row b">
