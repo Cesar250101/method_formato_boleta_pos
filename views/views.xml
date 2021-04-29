@@ -117,6 +117,37 @@
         </xpath>
       </field>
     </record>
+    <record model="ir.ui.view" id="method_formato_boleta_pos.total">
+      <field name="name">method.formato.boleta.pos.total</field>
+      <field name="inherit_id" ref="l10n_cl_dte_point_of_sale.report_boleta_subtotal_layout"/>
+      <field name="arch" type="xml">
+        <xpath expr="//div[@id='subtotal']" position="replace">
+          <div class="row" id="subtotal">
+              <div class="col-xs-6" style="text-aling:right;">
+                <table class="table table-condensed">
+                  <tr t-if="o.exento() !=0">
+                    <td>Exento:</td>
+                    <td class="text-right">
+                      <t t-esc="o.exento()" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.company_id.currency_id}"/>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <strong>MONTO TOTAL</strong>
+                    </td>
+                    <td class="text-right">
+                      <strong t-esc="o.amount_total" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: o.company_id.currency_id}"/>
+                      <t t-if="o.state=='paid'">
+                            <strong style="color:red">PAGADO </strong>
+                      </t>
+                    </td>
+                  </tr>
+                </table>                
+              </div>
+            </div>          
+        </xpath>
+      </field>
+    </record>
 
     <record model="ir.ui.view" id="method_formato_boleta_pos.sii_barcode_layout">
       <field name="name">method.formato.boleta.pos.sii_barcode_layout</field>
@@ -141,7 +172,6 @@
               <t t-if="o.document_class_id.sii_code not in [ 61 ]" t-esc="o.company_id.website + '/boleta/' + str(o.sii_document_number)" />
             </p>
           </div>
-
         </xpath>
       </field>
     </record>
