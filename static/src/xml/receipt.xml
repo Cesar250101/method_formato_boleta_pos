@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-extend="XmlReceipt">
+        <t t-jquery="t[t-if*='receipt.table']" t-operation="replace">
+            <line>--------------------------------</line>
+            <line>
+                <left>At table:</left>
+                <right><t t-esc='receipt.table' /></right>
+            </line>
+            <t t-if='receipt.customer_count'>
+                <line>
+                    <left>Guests:</left>
+                    <right><t t-esc='receipt.customer_count' /></right>
+                </line>
+            </t>
+        </t>
+        <t t-jquery="t[t-if*='receipt.customer_count']" t-operation="replace"/>
+    </t>
+
+</templates>

@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-extend="TableWidget">
+        <t t-jquery=">t" t-operation="replace">
+            <t t-if='!widget.selected '>
+                <t t-if="widget and widget.need_to_order() == 1">
+                    <div class='table blink' t-att-style='widget.table_style_str()'>
+                        <span
+                            t-if="widget.table.shape"
+                            t-att-class='"table-cover " + (widget.fill >= 1 ? "full" : "")'
+                            t-att-style='"height: " + Math.ceil(widget.fill * 100) + "%;"'
+                            ></span>
+                        <t t-if='widget.pos.get_count_need_print(widget.table).active_print !== 0'>
+                            <span class='active_print'><t t-esc='widget.pos.get_count_need_print(widget.table).active_print'/></span>
+                        </t>
+                        <t t-if='widget.pos.get_count_need_print(widget.table).active_print !== 0'>
+                            <span class='active_print'><t t-esc='widget.pos.get_count_need_print(widget.table).active_print'/></span>
+                        </t>
+                        <t t-if='widget.pos.get_count_need_print(widget.table).unactive_print !== 0'>
+                            <span class='unactive_print'><t t-esc='widget.pos.get_count_need_print(widget.table).unactive_print'/></span>
+                        </t>
+                        <t t-if='widget.get_waiting_delivery()'>
+                            <span class="waiting-delivery blink"><t t-esc='widget.get_waiting_delivery()'/></span>
+                        </t>
+                        <t t-if='widget.get_error()'>
+                            <span class="waiting-error blink"><t t-esc='widget.get_error()'/></span>
+                        </t>
+                        <t t-if="widget.get_info_order()['amount_total'] !== 0">
+                            <div class="create-time">In: <t t-esc='widget.get_info_order().created_time'/></div>
+                            <div class="order-information"><t t-esc='widget.format_currency(widget.get_info_order().amount_total)'/></div>
+                        </t>
+                        <span class='table-name'>
+                            <t t-esc='widget.table.name' />
+                        </span>
+                        <span class="table-seats"><t t-esc="widget.table.seats" /></span>
+                    </div>
+                </t>
+                <t t-if="widget and widget.need_to_order() == 0">
+                    <div class='table' t-att-style='widget.table_style_str()'>
+                        <span
+                            t-if="widget.table.shape"
+                            t-att-class='"table-cover " + (widget.fill >= 1 ? "full" : "")'
+                            t-att-style='"height: " + Math.ceil(widget.fill * 100) + "%;"'
+                            ></span>
+                        <t t-if='widget.pos.get_count_need_print(widget.table).active_print !== 0'>
+                            <span class='active_print'><t t-esc='widget.pos.get_count_need_print(widget.table).active_print'/></span>
+                        </t>
+                        <t t-if='widget.pos.get_count_need_print(widget.table).unactive_print !== 0'>
+                            <span class='unactive_print'><t t-esc='widget.pos.get_count_need_print(widget.table).unactive_print'/></span>
+                        </t>
+                        <t t-if='widget.get_waiting_delivery()'>
+                            <span class="waiting-delivery blink"><t t-esc='widget.get_waiting_delivery()'/></span>
+                        </t>
+                        <t t-if='widget.get_error()'>
+                            <span class="waiting-error blink"><t t-esc='widget.get_error()'/></span>
+                        </t>
+                        <t t-if="widget.get_info_order()['amount_total'] !== 0">
+                            <div class="create-time">In: <t t-esc='widget.get_info_order().created_time'/></div>
+                            <div class="order-information"><t t-esc='widget.format_currency(widget.get_info_order().amount_total)'/></div>
+                        </t>
+                        <span class='table-name'>
+                            <t t-esc='widget.table.name' />
+                        </span>
+                        <span class="table-seats"><t t-esc="widget.table.seats" /></span>
+                    </div>
+                </t>
+            </t>
+            <t t-if='widget.selected'>
+                <div class='table selected' t-att-style='widget.table_style_str()'>
+                    <span class='table-name'>
+                        <t t-esc='widget.table.name' />
+                    </span>
+                    <span class="table-seats"><t t-esc="widget.table.seats" /></span>
+                    <t t-if="widget.table.shape === 'round'">
+                        <span class='table-handle top'></span>
+                        <span class='table-handle bottom'></span>
+                        <span class='table-handle left'></span>
+                        <span class='table-handle right'></span>
+                    </t>
+                    <t t-if="widget.table.shape === 'square'">
+                        <span class='table-handle top right'></span>
+                        <span class='table-handle top left'></span>
+                        <span class='table-handle bottom right'></span>
+                        <span class='table-handle bottom left'></span>
+                    </t>
+                </div>
+            </t>
+        </t>
+    </t>
+
+    <t t-extend="Orderline">
+        <t t-jquery="ul[class*='info-list']:first" t-operation="after">
+            <t t-if="widget.pos.config.screen_type and widget.pos.config.screen_type !='kitchen' and widget.pos.config.send_order_to_kitchen">
+                <ul class="extra_functions">
+                    <li class="info">
+                        <div class="o_statusbar_status o_field_widget o_readonly_modifier" name="state">
+                            <span type="line-state" t-attf-class="line-state btn btn-sm o_arrow_button disabled #{ ( line.state =='draft' ) ? 'btn-warning blink' : 'btn-default' }">
+                                Order
+                            </span>
+                            <span type="line-state" t-attf-class="line-state btn btn-sm o_arrow_button disabled #{ ( line.state =='Waiting' ) ? 'btn-success blink' : 'btn-default' }">
+                                Send
+                            </span>
+                            <span type="line-state" t-attf-class="line-state btn btn-sm o_arrow_button disabled #{ ( line.state =='Waiting-delivery' ) ? 'btn-warning blink' : 'btn-default' }">
+                                Ready
+                            </span>
+                            <span type="line-state button" t-attf-class="line-state btn btn-sm o_arrow_button disabled #{ ( line.state =='Done' ) ? 'btn-success' : 'btn-default' }">
+                                Done
+                            </span>
+                            <span type="line-state button" t-attf-class="line-state btn btn-sm o_arrow_button disabled #{ ( line.state =='High-Priority' ) ? 'btn-danger blink' : 'btn-default' }">
+                                Priority
+                            </span>
+                            <span type="line-state button" t-attf-class="line-state btn btn-sm o_arrow_button disabled #{ ( line.state =='Error' ) ? 'btn-danger' : 'btn-default' }">
+                                Error
+                            </span>
+                            <span type="line-state button" t-attf-class="line-state btn btn-sm o_arrow_button disabled #{ ( line.state =='Not-enough-material' ) ? 'btn-danger blink' : 'btn-default' }">
+                                Not enough material
+                            </span>
+                            <span type="line-state button" t-attf-class="line-state btn btn-sm disabled #{ ( line.state =='Cancel' ) ? 'btn-danger' : 'btn-default' }">
+                                Cancel
+                            </span>
+                        </div>
+                    </li>
+                </ul>
+                <ul class="kitchen-actions">
+                    <li class="info">
+                        <t t-if="line.state !== 'Done'">
+                            <t t-if="line.state == 'Waiting-delivery'">
+                                <span class='btn btn-success done'>
+                                    <i class="fa fa-certificate"/> Done
+                                </span>
+                            </t>
+                            <t t-if="line.state == 'Waiting-delivery'">
+                                <span class='btn btn-danger error'>
+                                    <i class="fa fa-bug"/> Error
+                                </span>
+                            </t>
+                            <t t-if="line.state != 'Cancel' || line.state != 'Error'">
+                                <t t-if="line.state !== 'High-Priority'">
+                                    <t t-if="line.state !== 'Waiting-delivery' and line.state !== 'Cancel'">
+                                        <span class='btn btn-warning priority'>
+                                            <i class="fa fa-bolt"/> Priority
+                                        </span>
+                                    </t>
+                                </t>
+                            </t>
+                            <t t-if="line.state === 'Error'">
+                                <span class='btn put-back'>
+                                    <i class="fa fa-arrow-left"/> Put Back
+                                </span>
+                            </t>
+                            <t t-if="line.state === 'draft' || line.state === 'Error' || line.state == 'Not-enough-material'">
+                                <span class='btn btn-danger cancel'>
+                                    <i class="fa fa-bug"/> Cancel
+                                </span>
+                            </t>
+                        </t>
+                    </li>
+                </ul>
+            </t>
+        </t>
+    </t>
+
+    <t t-name="set_order_done">
+        <div class='control-button'>
+            <i class='fa fa-check' />Done all
+        </div>
+    </t>
+
+    <t t-name="set_line_high_priority">
+        <div class='control-button'>
+            <i class='fa fa-check' />Set Priority
+        </div>
+    </t>
+
+    <t t-name="set_line_exit_high_priority">
+        <div class='control-button'>
+            <i class='fa fa-check' />Exit Priority
+        </div>
+    </t>
+
+    <t t-name="delivery_kitchen">
+        <div class='control-button'>
+            <i class='fa fa-check' />Send kitchen/bar
+        </div>
+    </t>
+
+</templates>

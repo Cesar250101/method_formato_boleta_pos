@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="button_kitchen_receipt_screen">
+        <div class='control-button'>
+            <i class='fa fa-print' />Bar Receipt (no posbox)
+        </div>
+    </t>
+
+    <t t-name="kitchen_receipt_screen">
+        <div class='receipt-screen screen'>
+            <div class='full_width screen-content'>
+                <div class='top-content'>
+                    <span class='button back'>
+                        <i class='fa fa-angle-double-left'></i>
+                        Back
+                    </span>
+                </div>
+                <div class="centered-content touch-scrollable">
+                    <div class="button print-kitchen-receipt">
+                        <i class='fa fa-print'></i> Print Web
+                    </div>
+                    <div class="pos-receipt-container">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="kitchen_receipt_html">
+        <div class="pos-sale-ticket">
+            <table class='receipt-orderlines'>
+                <div class="pos-center-align button"><t t-esc='floor' />:<t t-esc='table' /></div>
+                <colgroup>
+                    <col width='50%' />
+                    <col width='25%' />
+                    <col width='25%' />
+                </colgroup>
+                <t t-if="new_items.length">
+                    <div class="pos-center-align">NEW</div>
+                </t>
+                <tr t-foreach="new_items" t-as="change">
+                    <div style='text-align:left'>
+                        <t t-esc="change['qty']"/> |
+                        <t t-esc="change['name']"/>
+                        <t t-if="change['note']">
+                            (<t t-esc="change['note']"/>)
+                        </t>
+                    </div>
+                    <t t-if="change.uom">
+                        <div style="text-align: left">
+                            <span font='c' bold='off' line-ratio='0.4' indent='1' width='30'>--- <t t-esc="change.uom['name']" /></span>
+                        </div>
+                    </t>
+                    <div>--------------------------------</div>
+                </tr>
+                <t t-if="cancelled_items.length">
+                    <div class="pos-center-align">CANCELLED</div>
+                </t>
+                <tr t-foreach="cancelled_items" t-as="change">
+                    <div style='text-align:left'>
+                        <t t-esc="change['qty']"/> |
+                        <t t-esc="change['name']"/>
+                        <t t-if="change['note']">
+                            (<t t-esc="change['note']"/>)
+                        </t>
+                    </div>
+                    <t t-if="change.uom">
+                        <div style="text-align: left">
+                            <span font='c' bold='off' line-ratio='0.4' indent='1' width='30'>--- <t t-esc="change.uom['name']" /></span>
+                        </div>
+                    </t>
+                    <div>--------------------------------</div>
+                </tr>
+            </table>
+        </div>
+    </t>
+
+    <t t-name="kitchen_receipt_xml">
+        <receipt
+            align='center'
+            width='40'
+            size='double-height'
+            line-ratio='0.4'
+            value-decimals='3'
+            value-thousands-separator=''
+            value-autoint='on'
+        >
+            <t t-if="table and floor">
+                <div bold='on' size='double'><span bold='off' size='double-height'><t t-esc='floor' />:<t t-esc='table' /></span> </div>
+            </t>
+            <t t-if="cancelled_items.length > 0">
+                <div color='red'>
+                    <div bold='on' size='double'>CANCELLED <span bold='off' size='double-height'><t t-esc='time.hours' />:<t t-esc='time.minutes' /></span> </div>
+                    <br />
+                    <t t-foreach="cancelled_items" t-as="change">
+                        <line>
+                            <left><t t-esc="change.name" /></left>
+                            <right><value><t t-esc="change.qty" /></value></right>
+                        </line>
+                        <t t-if="change.note">
+                            <line>
+                                <left>NOTE</left>
+                                <right>...</right>
+                            </line>
+                            <div><span font='b' bold='off' line-ratio='0.4' indent='1' width='30'>--- <t t-esc="change.note" /></span></div>
+                            <line></line>
+                        </t>
+                        <t t-if="change.uom">
+                            <div style="text-align: left">
+                                <span font='c' bold='off' line-ratio='0.4' indent='1' width='30'>--- <t t-esc="change.uom['name']" /></span>
+                            </div>
+                        </t>
+                        <div>--------------------------------</div>
+                    </t>
+                    <br />
+                    <br />
+                </div>
+            </t>
+            <t t-if="new_items.length > 0">
+                <div color='red'>
+                    <div bold='on' size='double'>NEW <span bold='off' size='double-height'><t t-esc='time.hours' />:<t t-esc='time.minutes' /></span> </div>
+                    <br />
+                    <br />
+                    <t t-foreach="new_items" t-as="change">
+                        <line>
+                            <left><t t-esc="change.name" /></left>
+                            <right><value><t t-esc="change.qty" /></value></right>
+                        </line>
+                        <t t-if="change.note">
+                            <line>
+                                <left>NOTE</left>
+                                <right>...</right>
+                            </line>
+                            <div><span font='b' bold='off' line-ratio='0.4' indent='1' width='30'>--- <t t-esc="change.note" /></span></div>
+                            <line></line>
+                        </t>
+                        <t t-if="change.uom">
+                            <div style="text-align: left">
+                                <span font='c' bold='off' line-ratio='0.4' indent='1' width='30'>--- <t t-esc="change.uom['name']" /></span>
+                            </div>
+                        </t>
+                        <div>--------------------------------</div>
+                    </t>
+                    <br />
+                    <br />
+                </div>
+            </t>
+        </receipt>
+    </t>
+
+</templates>
